@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-Microservicio de autenticación robusto construido con Node.js, Express y MongoDB, ofreciendo características seguras de gestión de usuarios y autenticación.
+Microservicio de autenticación construido con Node.js, Express y MongoDB, ofreciendo características seguras de gestión de usuarios y autenticación.
 
 ## Características
 
