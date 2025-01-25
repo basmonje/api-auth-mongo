@@ -62,4 +62,35 @@ export default class SessionService {
       }
     );
   }
+
+  async listActiveSessions(userId) {
+    return await SessionModel.find({
+      user_id: userId,
+      status: "active",
+      expires_at: { $gt: new Date() },
+    }).select("-access_token -refresh_token");
+  }
+
+  async revokeSpecificSession(sessionId, reason = "admin_action") {
+    const session = await SessionModel.findById(sessionId);
+
+    if (!session) {
+      ErrorHandler.notFound("Sesión no encontrada");
+    }
+
+    await session.revoke(reason);
+
+    return {
+      message: "Sesión revocada exitosamente",
+    };
+  }
+
+  async revokeAllUserSessions(userId) {
+    const result = await SessionModel.revokeUserSessions(userId);
+
+    return {
+      message: `Se revocaron ${result.modifiedCount} sesiones`,
+      totalRevoked: result.modifiedCount,
+    };
+  }
 }

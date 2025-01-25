@@ -106,6 +106,25 @@ sessionSchema.statics.findActiveSessions = function (userId) {
   }).sort({ last_activity: -1 });
 };
 
+// Método estático para revocar todas las sesiones de un usuario
+sessionSchema.statics.revokeUserSessions = async function (
+  userId,
+  reason = "admin_action"
+) {
+  return this.updateMany(
+    {
+      user_id: userId,
+      status: "active",
+    },
+    {
+      status: "revoked",
+      revoked_at: new Date(),
+      revocation_reason: reason,
+    }
+  );
+};
+
+
 // Middleware pre-save para actualizar el estado si ha expirado
 sessionSchema.pre("save", function (next) {
   if (this.expires_at < new Date()) {
