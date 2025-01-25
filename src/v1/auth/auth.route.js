@@ -6,7 +6,7 @@ import controllers from "./auth.controller.js";
 
 const router = Router();
 
-router.post("/singin", controllers.signIn);
+router.post("/signin", controllers.signIn);
 
 router.post("/signup", controllers.signUp);
 

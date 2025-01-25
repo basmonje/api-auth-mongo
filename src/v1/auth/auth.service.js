@@ -86,12 +86,12 @@ export default class AuthService {
       user_id: userFound._id,
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken,
-      user_agent: "",
-      ip_address: "",
+      user_agent: requestInfo.user_agent,
+      ip_address: requestInfo.ip,
       device_info: {
-        type: "other",
-        browser: "",
-        os: "",
+        type: requestInfo.deviceType,
+        browser: requestInfo.browser,
+        os: requestInfo.os,
       },
     });
 
@@ -209,7 +209,7 @@ export default class AuthService {
     };
   }
 
-  async verifyAuth({ email, code }) {
+  async verifyAuth({ email, code }, requestInfo) {
     if (!email || !code) ErrorHandler.notFound("No existen credenciales");
 
     const userFound = await UserModel.findOne({
@@ -230,6 +230,19 @@ export default class AuthService {
     const tokens = await this.generateTokens(userFound._id);
 
     await TwoFactor.deleteOne({ _id: factorFound._id });
+
+    await session.create({
+      user_id: userFound._id,
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+      user_agent: requestInfo.user_agent,
+      ip_address: requestInfo.ip,
+      device_info: {
+        type: requestInfo.deviceType,
+        browser: requestInfo.browser,
+        os: requestInfo.os,
+      },
+    });
 
     return {
       id: userFound._id,

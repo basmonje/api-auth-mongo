@@ -72,7 +72,6 @@ export async function signIn(req, res, next) {
       browser: detectBrowser(req),
       os: detectOS(req),
     };
-
     const result = await service.login(req.body, requestInfo);
     res.status(200).json({
       data: result,
@@ -95,7 +94,14 @@ export async function signUp(req, res, next) {
 
 export async function verifyAuth(req, res, next) {
   try {
-    const result = await service.verifyAuth(req.body);
+    const requestInfo = {
+      ip: req.ip,
+      user_agent: req.headers["user-agent"],
+      deviceType: detectDeviceType(req),
+      browser: detectBrowser(req),
+      os: detectOS(req),
+    };
+    const result = await service.verifyAuth(req.body, requestInfo);
     res.status(200).json({
       data: result,
     });
