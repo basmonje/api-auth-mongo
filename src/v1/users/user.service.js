@@ -1,5 +1,6 @@
 import UserModel, { encryptPassword } from "./user.model.js";
 import RoleModel from "../roles/role.model.js";
+import SessionModel from "../sessions/session.model.js";
 import { ErrorHandler } from "../../utils/error.js";
 
 export default class UserService {
@@ -190,5 +191,57 @@ export default class UserService {
     const status = enable ? "activado" : "desactivado";
 
     return { message: `2FA ${status} correctamente` };
+  }
+
+  async changePassword(userId, { currentPassword, newPassword }) {
+    const user = await this.getById(userId);
+
+    // Verificar contraseña actual
+    const isValidPassword = await comparePassword(
+      currentPassword,
+      user.password
+    );
+    if (!isValidPassword) {
+      ErrorHandler.unauthorized("Contraseña actual incorrecta");
+    }
+
+    // Actualizar contraseña
+    user.password = await encryptPassword(newPassword);
+    await user.save();
+
+    // Revocar todas las sesiones
+    await SessionModel.revokeUserSessions(userId, "password_changed");
+
+    return { message: "Contraseña actualizada exitosamente" };
+  }
+
+  async updateUserStatus(userId, active) {
+    const user = await this.getById(userId);
+
+    user.active = active;
+    await user.save();
+
+    if (!active) {
+      // Si se desactiva, revocar todas las sesiones
+      await SessionModel.revokeUserSessions(userId, "account_disabled");
+    }
+
+    return {
+      message: active ? "Usuario activado" : "Usuario desactivado",
+      active: user.active,
+    };
+  }
+
+  async resetTwoFactor(userId) {
+    const user = await this.getById(userId);
+
+    // Desactivar 2FA
+    user.two_factor_enabled = false;
+    await user.save();
+
+    // Revocar todas las sesiones
+    await SessionModel.revokeUserSessions(userId, "2fa_reset");
+
+    return { message: "Autenticación de dos factores reiniciada" };
   }
 }
