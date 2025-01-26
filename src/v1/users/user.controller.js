@@ -15,7 +15,7 @@ export async function create(req, res, next) {
 export async function getAll(req, res, next) {
   try {
     const result = await service.getAll();
-    res.status(201).json({
+    res.status(200).json({
       data: result,
     });
   } catch (error) {
@@ -100,13 +100,34 @@ export async function revokeRole(req, res, next) {
   }
 }
 
-export async function toggleTwoFactor(req, res, next) {
+export async function changePassword(req, res, next) {
   try {
-    const result = await service.toggleTwoFactor(
-      req.params.id,
-      req.body.enable
-    );
+    const result = await service.changePassword(req.params.id, req.body);
+    res.status(200).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
+export async function updateUserStatus(req, res, next) {
+  try {
+    const result = await service.updateUserStatus(
+      req.params.id,
+      req.body.active
+    );
+    res.status(200).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function resetTwoFactor(req, res, next) {
+  try {
+    const result = await service.resetTwoFactor(req.params.id, req.body);
     res.status(200).json({
       data: result,
     });
@@ -125,5 +146,7 @@ export default {
   getRoles,
   assignRole,
   revokeRole,
-  toggleTwoFactor,
+  changePassword,
+  updateUserStatus,
+  resetTwoFactor,
 };

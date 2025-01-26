@@ -14,7 +14,7 @@ export const createApp = (config) => {
   app.use(express.json({ limit: 52428800 }));
   app.use(express.urlencoded({ extended: false, limit: 52428800 }));
 
-  if (config.env === "development") {
+  if (config.NODE_ENV === "development") {
     app.use(morgan("dev"));
   }
 
