@@ -142,7 +142,7 @@ export async function updateUserStatus(req, res, next) {
 
 export async function resetTwoFactor(req, res, next) {
   try {
-    const result = await service.resetTwoFactor(req.params.id);
+    const result = await service.resetTwoFactor(req.params.id, req.body);
     res.status(200).json({
       data: result,
     });
