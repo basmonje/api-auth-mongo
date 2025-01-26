@@ -1,4 +1,4 @@
-import UserModel, { encryptPassword } from "./user.model.js";
+import UserModel, { encryptPassword, comparePassword } from "./user.model.js";
 import RoleModel from "../roles/role.model.js";
 import SessionModel from "../sessions/session.model.js";
 import { ErrorHandler } from "../../utils/error.js";
@@ -201,6 +201,7 @@ export default class UserService {
       currentPassword,
       user.password
     );
+
     if (!isValidPassword) {
       ErrorHandler.unauthorized("Contraseña actual incorrecta");
     }
@@ -232,15 +233,18 @@ export default class UserService {
     };
   }
 
-  async resetTwoFactor(userId) {
+  async resetTwoFactor(userId, { active }) {
     const user = await this.getById(userId);
 
     // Desactivar 2FA
-    user.two_factor_enabled = false;
+    user.two_factor_enabled = active;
+
     await user.save();
 
-    // Revocar todas las sesiones
-    await SessionModel.revokeUserSessions(userId, "2fa_reset");
+    if (!active) {
+      // Revocar todas las sesiones
+      await SessionModel.revokeUserSessions(userId, "2fa_reset");
+    }
 
     return { message: "Autenticación de dos factores reiniciada" };
   }
