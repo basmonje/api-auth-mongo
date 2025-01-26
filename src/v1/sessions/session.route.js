@@ -12,4 +12,7 @@ router.delete("/:sessionId", controllers.revokeSession);
 // Revocar todas las sesiones de un usuario
 router.delete("/:userId/all", controllers.revokeAllSessions);
 
+// Ver todas las sesiones
+router.get("/", controllers.getAll);
+
 export default router;

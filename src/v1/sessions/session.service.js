@@ -93,4 +93,8 @@ export default class SessionService {
       totalRevoked: result.modifiedCount,
     };
   }
+
+  async getAll() {
+    return await SessionModel.find();
+  }
 }

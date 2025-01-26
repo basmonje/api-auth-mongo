@@ -100,21 +100,6 @@ export async function revokeRole(req, res, next) {
   }
 }
 
-export async function toggleTwoFactor(req, res, next) {
-  try {
-    const result = await service.toggleTwoFactor(
-      req.params.id,
-      req.body.enable
-    );
-
-    res.status(200).json({
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
 export async function changePassword(req, res, next) {
   try {
     const result = await service.changePassword(req.params.id, req.body);
@@ -161,7 +146,6 @@ export default {
   getRoles,
   assignRole,
   revokeRole,
-  toggleTwoFactor,
   changePassword,
   updateUserStatus,
   resetTwoFactor,

@@ -24,9 +24,7 @@ router.post("/:id/roles", controllers.assignRole);
 
 router.delete("/:id/roles", controllers.revokeRole);
 
-router.post("/:id/togle-2fa", controllers.toggleTwoFactor);
-
-router.post("/:id/change-password", controllers.changePassword);
+router.put("/:id/change-password", controllers.changePassword);
 
 router.put("/:id/status", controllers.updateUserStatus);
 

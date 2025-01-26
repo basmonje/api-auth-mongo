@@ -34,8 +34,20 @@ export async function revokeAllSessions(req, res, next) {
   }
 }
 
+export async function getAll(req, res, next) {
+  try {
+    const result = await service.getAll();
+    res.status(200).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export default {
   listSessions,
   revokeSession,
   revokeAllSessions,
+  getAll,
 };

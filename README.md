@@ -90,13 +90,23 @@ REFRESH_SECRET_APP=<jwt-secreto-refresh>
 - `PUT /api/v1/users/:id`: Actualizar usuario
 - `DELETE /api/v1/users/:id`: Eliminar usuario
 - `POST /api/v1/users/:id/roles`: Asignar roles
-- `DELETE /api/v1/users/:id/roles`: Revocar roles
+- `PUT /api/v1/users/:id/reset-2fa`: Actualizar 2FA
+- `PUT /api/v1/users/:id/change-password`: Cambiar contraseña
+- `PUT /api/v1/users/:id/status`: Actualizar estado
 
 ### Roles y Permisos
 
 - `GET /api/v1/roles`: Listar roles
 - `POST /api/v1/roles`: Crear rol
 - `GET /api/v1/permissions`: Listar permisos
+
+### Gestión de Sesiones
+
+- `GET /api/v1/sessions`: Listar todas las sesiones (requiere permisos de administrador).
+- `GET /api/v1/sessions/:userId/active`: Listar sesiones activas de un usuario.
+- `DELETE /api/v1/sessions/:sessionId`: Revocar una sesión específica.
+- `DELETE /api/v1/sessions/:userId/all`: Revocar todas las sesiones de un usuario.
+<!-- - `POST /api/v1/sessions`: Crear una nueva sesión (puede usarse para sesiones específicas en otros contextos).  -->
 
 ## Ejecutar Aplicación
 

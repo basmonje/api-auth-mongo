@@ -168,31 +168,6 @@ export default class UserService {
     };
   }
 
-  async toggleTwoFactor(user_id, enable) {
-    const userFound = await this.getById(user_id);
-
-    if (!userFound) {
-      ErrorHandler.notFound("Usuario no encontrado");
-    }
-
-    function stringToBoolean(value) {
-      if (typeof value === "string") {
-        return value.toLowerCase() === "true";
-      } else if (typeof value === "boolean") {
-        return value;
-      }
-      return false; // O lanza un error si no es string
-    }
-
-    userFound.two_factor_enabled = stringToBoolean(enable);
-
-    await userFound.save();
-
-    const status = enable ? "activado" : "desactivado";
-
-    return { message: `2FA ${status} correctamente` };
-  }
-
   async changePassword(userId, { currentPassword, newPassword }) {
     const user = await this.getById(userId);
 

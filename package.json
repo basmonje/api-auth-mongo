@@ -1,7 +1,7 @@
 {
   "name": "api-auth-mongo",
   "description": "Microservicio de autenticación robusto construido con Node.js, Express y MongoDB.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",

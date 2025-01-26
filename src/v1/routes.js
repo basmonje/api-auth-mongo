@@ -13,5 +13,5 @@ export default function routerV1(app) {
   router.use("/roles", RoleRouter);
   router.use("/users", UserRouter);
   router.use("/auth", AuthRouter);
-  router.use("/session", SessionRouter);
+  router.use("/sessions", SessionRouter);
 }
