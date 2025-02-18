@@ -125,17 +125,6 @@ export async function updateUserStatus(req, res, next) {
   }
 }
 
-export async function resetTwoFactor(req, res, next) {
-  try {
-    const result = await service.resetTwoFactor(req.params.id, req.body);
-    res.status(200).json({
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
 export default {
   create,
   getAll,
@@ -148,5 +137,4 @@ export default {
   revokeRole,
   changePassword,
   updateUserStatus,
-  resetTwoFactor,
 };

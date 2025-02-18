@@ -31,7 +31,6 @@ export default class UserService {
         "email",
         "last_login",
         "roles",
-        "two_factor_enabled",
       ])
       .populate("roles");
   }
@@ -206,21 +205,5 @@ export default class UserService {
       message: active ? "Usuario activado" : "Usuario desactivado",
       active: user.active,
     };
-  }
-
-  async resetTwoFactor(userId, { active }) {
-    const user = await this.getById(userId);
-
-    // Desactivar 2FA
-    user.two_factor_enabled = active;
-
-    await user.save();
-
-    if (!active) {
-      // Revocar todas las sesiones
-      await SessionModel.revokeUserSessions(userId, "2fa_reset");
-    }
-
-    return { message: "Autenticación de dos factores reiniciada" };
   }
 }

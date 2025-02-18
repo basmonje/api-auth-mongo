@@ -92,24 +92,6 @@ export async function signUp(req, res, next) {
   }
 }
 
-export async function verifyAuth(req, res, next) {
-  try {
-    const requestInfo = {
-      ip: req.ip,
-      user_agent: req.headers["user-agent"],
-      deviceType: detectDeviceType(req),
-      browser: detectBrowser(req),
-      os: detectOS(req),
-    };
-    const result = await service.verifyAuth(req.body, requestInfo);
-    res.status(200).json({
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
 export async function refreshToken(req, res, next) {
   try {
     const { refresh_token } = req.body;
@@ -164,7 +146,6 @@ export async function resetPassword(req, res, next) {
 export default {
   signIn,
   signUp,
-  verifyAuth,
   resetPassword,
   forgotPassword,
   refreshToken,

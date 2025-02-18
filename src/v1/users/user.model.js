@@ -31,10 +31,6 @@ const userSchema = new Schema(
         type: Schema.Types.ObjectId,
       },
     ],
-    two_factor_enabled: {
-      type: Boolean,
-      default: false,
-    },
     last_login: Date,
   },
   {

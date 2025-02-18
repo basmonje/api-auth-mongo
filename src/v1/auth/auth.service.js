@@ -3,20 +3,12 @@ import UserModel, {
   encryptPassword,
 } from "../users/user.model.js";
 import TokenModel from "./token.model.js";
-import TwoFactor from "./two-factor.model.js";
 import SessionService from "../sessions/session.service.js";
 import PasswordResetModel from "./password-reset.model.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { ErrorHandler } from "../../utils/error.js";
 import { JWT_SECRET_APP, JWT_REFRESH_SECRET_APP } from "../../utils/config.js";
-
-// Generar código y fecha de vencimiento
-function generateTwoFactorCode() {
-  const code = crypto.randomInt(100000, 999999); // Código de 6 dígitos
-  const expires = new Date(Date.now() + 5 * 60 * 1000); // Expira en 5 minutos
-  return { code, expires };
-}
 
 const session = new SessionService();
 
@@ -59,26 +51,6 @@ export default class AuthService {
     userFound.last_login = new Date();
 
     await userFound.save();
-
-    if (userFound.two_factor_enabled) {
-      const { code, expires } = generateTwoFactorCode();
-
-      const newTwoFactorInUser = new TwoFactor({
-        code: code,
-        expires_at: expires,
-        user_id: userFound._id,
-      });
-
-      await newTwoFactorInUser.save();
-
-      console.log(`Código 2FA para ${userFound.email}: ${code}`);
-
-      return {
-        message: "Código enviado con exito, revisar entraba de mensajes.",
-        // code: code,
-        // email: userFound.email,
-      };
-    }
 
     const tokens = await this.generateTokens(userFound._id);
 
@@ -206,47 +178,6 @@ export default class AuthService {
 
     return {
       message: "Contraseña actualizada exitosamente",
-    };
-  }
-
-  async verifyAuth({ email, code }, requestInfo) {
-    if (!email || !code) ErrorHandler.notFound("No existen credenciales");
-
-    const userFound = await UserModel.findOne({
-      email: email,
-    });
-
-    if (!userFound) ErrorHandler.notFound("No existe Usuario");
-
-    const factorFound = await TwoFactor.findOne({
-      user_id: userFound._id,
-      code,
-    });
-
-    if (!factorFound || factorFound.expires_at < Date.now()) {
-      ErrorHandler.unauthorized("Código inválido o expirado");
-    }
-
-    const tokens = await this.generateTokens(userFound._id);
-
-    await TwoFactor.deleteOne({ _id: factorFound._id });
-
-    await session.create({
-      user_id: userFound._id,
-      access_token: tokens.accessToken,
-      refresh_token: tokens.refreshToken,
-      user_agent: requestInfo.user_agent,
-      ip_address: requestInfo.ip,
-      device_info: {
-        type: requestInfo.deviceType,
-        browser: requestInfo.browser,
-        os: requestInfo.os,
-      },
-    });
-
-    return {
-      id: userFound._id,
-      tokens,
     };
   }
 

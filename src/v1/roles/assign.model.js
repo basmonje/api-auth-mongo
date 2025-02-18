@@ -11,4 +11,4 @@ const assignmentRoleSchema = new Schema(
   }
 );
 
-module.exports = model("AssignmentRole", assignmentRoleSchema);
+export default model("AssignmentRole", assignmentRoleSchema);

@@ -10,8 +10,6 @@ router.post("/signin", controllers.signIn);
 
 router.post("/signup", controllers.signUp);
 
-router.post("/verify", controllers.verifyAuth);
-
 router.post("/forgot-password", controllers.forgotPassword);
 
 router.post("/:token/reset-password", controllers.resetPassword);

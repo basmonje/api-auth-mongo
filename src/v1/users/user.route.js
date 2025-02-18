@@ -28,6 +28,4 @@ router.put("/:id/change-password", controllers.changePassword);
 
 router.put("/:id/status", controllers.updateUserStatus);
 
-router.post("/:id/reset-2fa", controllers.resetTwoFactor);
-
 export default router;
